@@ -1,4 +1,4 @@
-package Model;
+package com.example.splitdish;
 public class Diner{
     private String name;
     

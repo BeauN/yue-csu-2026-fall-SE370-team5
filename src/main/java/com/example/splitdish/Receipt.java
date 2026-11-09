@@ -1,4 +1,4 @@
-package Model;
+package com.example.splitdish;
 public class Receipt {
     //might have to import recieptitem
     private String restaurantName;

@@ -1,3 +1,4 @@
+package com.example.splitdish;
 public class OrderShare {
     private ReceiptItem item;
     private Diner diner;

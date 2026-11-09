@@ -1,5 +1,4 @@
- 
-package Model;
+package com.example.splitdish;
  
     public class ReceiptItem {
         private String name;
