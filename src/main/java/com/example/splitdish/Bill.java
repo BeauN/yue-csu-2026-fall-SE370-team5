@@ -28,7 +28,7 @@ public class Bill{
 
     public void removeDiner(Diner diner) {
         // Loop backward to avoid skipping elements when removals shift indices.
-        // Can avoid this behavior with ArrayList if you use an Iterator
+        // You can avoid this behavior with ArrayList if you use an Iterator
         for (int i = orderShares.size() - 1; i >= 0; i--) {
             if (orderShares.get(i).getDiner() == diner) {
                 orderShares.remove(i);
@@ -75,6 +75,7 @@ public class Bill{
                 tempOrderShares.add(orderShares.get(i));
             }
         }
+        return tempOrderShares;
     }
 
 }

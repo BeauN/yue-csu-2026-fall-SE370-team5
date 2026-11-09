@@ -1,8 +1,5 @@
 package com.example.splitdish;
 
-import Model.Receipt;
-import Model.ReceiptItem;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -149,6 +146,7 @@ public class GeminiReceiptParser implements ReceiptParser {
             // Send HTTP request
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
+                .timeout(java.time.Duration.ofSeconds(30))
                 .header("Content-Type", "application/json")
                 .header("x-goog-api-key", apiKey)
                 .POST(HttpRequest.BodyPublishers.ofString(
@@ -169,8 +167,7 @@ public class GeminiReceiptParser implements ReceiptParser {
             if (response.statusCode() != 200) {
 
                 throw new ReceiptParseException(
-                    "Gemini API error (" + response.statusCode()
-                    + "): " + response.body()
+                    "Gemini API error: " + response.statusCode()
                 );
             }
 
