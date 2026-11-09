@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 
 public class ReceiptSourceController {
+    private File selectedFile;
     @FXML
     private ImageView receiptImageView;
 
@@ -29,7 +30,7 @@ public class ReceiptSourceController {
         );
 
         Stage stage = (Stage) receiptImageView.getScene().getWindow();
-        File selectedFile = fileChooser.showOpenDialog(stage);
+        selectedFile = fileChooser.showOpenDialog(stage);
 
         if(selectedFile != null) {
             System.out.println(selectedFile.getAbsolutePath());
@@ -46,6 +47,9 @@ public class ReceiptSourceController {
 
     @FXML
     protected void onContinueClick() {
+        if(selectedFile == null) {
+            return;
+        }
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("receipt-review-view.fxml")

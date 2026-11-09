@@ -37,4 +37,20 @@ public class HelloController {
             alert.showAndWait();
         }
     }
+    @FXML
+    private void onManualEntryClick() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(
+                    HelloApplication.class.getResource("receipt-review-view.fxml")
+            );
+            Scene scene = new Scene(fxmlLoader.load(), 390, 700);
+            ReceiptReviewController controller = fxmlLoader.getController();
+            Stage stage = (Stage) welcomeText.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -6,8 +6,10 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.control.Alert;
 
 public class ReceiptReviewController {
+    //private Receipt receipt;
     @FXML
     private TextField restaurantNameField;
 
@@ -15,13 +17,16 @@ public class ReceiptReviewController {
     private TextField taxField;
 
     @FXML
-    private TextField totalField;
+    private TextField receiptTotalField;
+
+    @FXML
+    private TextField tipPercentageField;
 
     @FXML
     private Button continueButton;
 
     @FXML
-    private void onContinueClick() {
+    private void onNextButtonClick() {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("diner-view.fxml")
@@ -31,22 +36,42 @@ public class ReceiptReviewController {
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Navigation Error");
+            alert.setHeaderText("Unable to open Add Diners");
+            alert.setContentText("An error occurred while loading the next screen.");
+            alert.showAndWait();
         }
     }
 
     @FXML
-    private void onAddClick() {
+    private void onAddItemClick() {
 
     }
 
     @FXML
-    private void onEditClick() {
+    private void onEditItemClick() {
 
     }
 
     @FXML
-    private void onDeleteClick(){
+    private void onDeleteItemClick(){
 
     }
 
+    @FXML
+    private void onTaxChanged() {
+
+    }
+
+    @FXML
+    private void onReceiptTotalChanged() {
+
+    }
+
+    @FXML
+    private void onTipChanged() {
+
+    }
 }

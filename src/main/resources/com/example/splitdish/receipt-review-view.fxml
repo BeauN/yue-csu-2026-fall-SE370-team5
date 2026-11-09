@@ -17,24 +17,30 @@
             </TableView>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onAddClick" text="Add" />
-                  <Button mnemonicParsing="false" onAction="#onEditClick" text="Edit" />
-                  <Button mnemonicParsing="false" onAction="#onDeleteClick" text="Delete" />
+                  <Button mnemonicParsing="false" onAction="#onAddItemClick" text="Add" />
+                  <Button mnemonicParsing="false" onAction="#onEditItemClick" text="Edit" />
+                  <Button mnemonicParsing="false" onAction="#onDeleteItemClick" text="Delete" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label prefWidth="100.0" text="Tax:" />
-                  <TextField fx:id="taxField" />
+                  <TextField fx:id="taxField" onAction="#onTaxChanged" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label prefWidth="100.0" text="Total:" />
-                  <TextField fx:id="totalField" />
+                  <TextField fx:id="receiptTotalField" onAction="#onReceiptTotalChanged" />
                </children>
             </HBox>
-            <Button fx:id="continueButton" mnemonicParsing="false" onAction="#onContinueClick" text="Continue" />
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="236.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label prefWidth="100.0" text="Tip %:" />
+                  <TextField fx:id="tipPercentageField" onAction="#onTipChanged" />
+               </children>
+            </HBox>
+            <Button fx:id="continueButton" mnemonicParsing="false" onAction="#onNextButtonClick" text="Continue" />
          </children>
       </VBox>
    </children>

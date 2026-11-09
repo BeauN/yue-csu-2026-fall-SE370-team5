@@ -11,4 +11,5 @@
 
     <Label fx:id="welcomeText" prefHeight="23.0" prefWidth="47.0" text="SplitDish" />
     <Button onAction="#onHelloButtonClick" text="Upload Receipt" />
+   <Button mnemonicParsing="false" onAction="#onManualEntryClick" text="Enter Manually" />
 </VBox>
