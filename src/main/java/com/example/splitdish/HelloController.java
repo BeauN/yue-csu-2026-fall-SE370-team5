@@ -45,6 +45,8 @@ public class HelloController {
             );
             Scene scene = new Scene(fxmlLoader.load(), 390, 700);
             ReceiptReviewController controller = fxmlLoader.getController();
+            Receipt receipt = new Receipt("");
+            controller.setReceipt(receipt);
             Stage stage = (Stage) welcomeText.getScene().getWindow();
             stage.setScene(scene);
             stage.show();

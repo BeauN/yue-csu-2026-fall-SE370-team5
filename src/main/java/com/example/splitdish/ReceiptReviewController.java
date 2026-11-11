@@ -39,6 +39,12 @@ public class ReceiptReviewController {
         restaurantNameField.setText(receipt.getRestaurantName());
         taxField.setText(String.format("%.2f", receipt.getTax()));
         receiptTotalField.setText(String.format("%.2f", receipt.getTotal()));
+
+        if(bill == null) {
+            tipPercentageField.setText("0.00");
+        } else {
+            tipPercentageField.setText(String.format(java.util.Locale.US, "%.2f", bill.getTipPercentage()));
+        }
     }
 
     public void showError(String title, String message) {
@@ -53,18 +59,56 @@ public class ReceiptReviewController {
         this.bill = bill;
         this.receipt = bill.getReceipt();
         displayReceipt();
+    }
 
-        tipPercentageField.setText(String.format(java.util.Locale.US,"%.2f", bill.getTipPercentage()));
+    //Purpose: Validate the restaurant name, tax, tip, and total together. If anything is invalid
+    //show an error and return false. Otherwise, update Receipt and return true.
+    private boolean saveReviewFields() {
+        if(receipt == null) {
+            showError("Missing Receipt", "No receipt has been loaded.");
+            return false;
+        }
+        String name = restaurantNameField.getText().trim();
+        if(name.isEmpty()) {
+            showError("Invalid Restaurant Name", "Restaurant name cannot be empty.");
+            return false;
+        }
+        double tax;
+        double total;
+        double tip;
+
+        try{
+            tax = Double.parseDouble(taxField.getText().trim());
+            total = Double.parseDouble(receiptTotalField.getText().trim());
+            tip = Double.parseDouble(tipPercentageField.getText().trim());
+
+            if(!Double.isFinite(tax) || !Double.isFinite(total) || !Double.isFinite(tip) ||
+                    tax < 0 || total < 0 || tip < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            showError("Invalid Amount", "Tax, total, and tip must be valid, non-negative numbers.");
+            return false;
+        }
+
+        //we validate all three values before setting them, so we don't save a partially invalid receipt
+        receipt.setRestaurantName(name);
+        receipt.setTax(tax);
+        receipt.setTotal(total);
+
+        if(bill == null) {
+            bill = new Bill(receipt);
+        }
+        bill.setTipPercentage(tip);
+        return true;
     }
 
     @FXML
     private void onNextButtonClick() {
-        if (receipt == null) {
+        if (!saveReviewFields()) {
             return;
         }
-        if (bill == null) {
-            bill = new Bill(receipt);
-        }
+
         //load the Diner window
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -77,12 +121,7 @@ public class ReceiptReviewController {
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
-
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Navigation Error");
-            alert.setHeaderText("Unable to open Add Diners");
-            alert.setContentText("An error occurred while loading the next screen.");
-            alert.showAndWait();
+            showError("Navigation Error", "Unable to open the Add Diners screen.");
         }
     }
 
