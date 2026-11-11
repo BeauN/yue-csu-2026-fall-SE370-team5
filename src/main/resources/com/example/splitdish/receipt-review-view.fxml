@@ -8,7 +8,7 @@
       <VBox alignment="TOP_CENTER" layoutX="72.0" layoutY="108.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
          <children>
             <Label text="Review Receipt" />
-            <TextField fx:id="restaurantNameField" promptText="Restaurant Name" />
+            <TextField fx:id="restaurantNameField" onAction="#onRestaurantNameChanged" promptText="Restaurant Name" />
             <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0">
               <columns>
                 <TableColumn fx:id="itemColumn" prefWidth="240.0" text="Item" />
