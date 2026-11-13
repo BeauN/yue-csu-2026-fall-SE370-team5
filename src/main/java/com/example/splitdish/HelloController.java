@@ -1,7 +1,6 @@
 package com.example.splitdish;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -29,16 +28,12 @@ public class HelloController {
             //prints the exception to the console
             e.printStackTrace();
             //alerts the user there was a problem
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Navigation Error");
-            alert.setHeaderText("Could not open the receipt upload screen.");
-            alert.setContentText("Please try again.");
-
-            alert.showAndWait();
+            AlertUtils.showError("Navigation Error", "Could not open the receipt upload screen.");
         }
     }
     @FXML
     private void onManualEntryClick() {
+        //go to the receipt review screen
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(
                     HelloApplication.class.getResource("receipt-review-view.fxml")
@@ -54,6 +49,7 @@ public class HelloController {
         }
         catch (IOException e) {
             e.printStackTrace();
+            AlertUtils.showError("Navigation Error", "Could not open the Receipt Review screen.");
         }
     }
 }

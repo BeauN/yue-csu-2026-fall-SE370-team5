@@ -500,10 +500,8 @@ public class GeminiReceiptParser implements ReceiptParser {
             }
 
 
-            // Set receipt tax and total
+            // Set receipt tax
             receipt.setTax(tax);
-
-            receipt.setTotal(total);
 
 
             // Return completed Receipt

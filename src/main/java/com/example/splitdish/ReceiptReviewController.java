@@ -6,6 +6,9 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ReceiptReviewController {
     private Receipt receipt;
@@ -13,6 +16,15 @@ public class ReceiptReviewController {
 
     @FXML
     private TextField restaurantNameField;
+
+    @FXML
+    private TableView<ReceiptItem> itemTable;
+
+    @FXML
+    private TableColumn<ReceiptItem, String> itemColumn;
+
+    @FXML
+    private TableColumn<ReceiptItem, Double> priceColumn;
 
     @FXML
     private TextField taxField;
@@ -26,15 +38,11 @@ public class ReceiptReviewController {
     @FXML
     private Button continueButton;
 
-    public void setReceipt(Receipt receipt) {
-        this.receipt = receipt;
-        displayReceipt();
-    }
-
     public void displayReceipt() {
         if(receipt == null) {
             return;
         }
+        itemTable.getItems().setAll(receipt.getItems());
         restaurantNameField.setText(receipt.getRestaurantName());
         taxField.setText(String.format("%.2f", receipt.getTax()));
         receiptTotalField.setText(String.format("%.2f", receipt.getTotal()));
@@ -52,8 +60,8 @@ public class ReceiptReviewController {
         displayReceipt();
     }
 
-    //Purpose: Validate the restaurant name, tax, tip, and total together. If anything is invalid
-    //show an error and return false. Otherwise, update Receipt and return true.
+    //Purpose: Validate the restaurant name, tax, and tip together. If anything is invalid
+    //show an error and return false. Otherwise, update and return true.
     private boolean saveReviewFields() {
         if(receipt == null) {
             AlertUtils.showError("Missing Receipt", "No receipt has been loaded.");
@@ -65,16 +73,14 @@ public class ReceiptReviewController {
             return false;
         }
         double tax;
-        double total;
         double tip;
 
         try{
             tax = Double.parseDouble(taxField.getText().trim());
-            total = Double.parseDouble(receiptTotalField.getText().trim());
             tip = Double.parseDouble(tipPercentageField.getText().trim());
 
-            if(!Double.isFinite(tax) || !Double.isFinite(total) || !Double.isFinite(tip) ||
-                    tax < 0 || total < 0 || tip < 0) {
+            if(!Double.isFinite(tax) || !Double.isFinite(tip) ||
+                    tax < 0 || tip < 0) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
@@ -82,13 +88,22 @@ public class ReceiptReviewController {
             return false;
         }
 
-        //we validate all four values before setting them, so we don't save a partially invalid receipt
+        //we validate all three values before setting them, so we don't save a partially invalid receipt
         receipt.setRestaurantName(name);
         receipt.setTax(tax);
-        receipt.setTotal(total);
         bill.setTipPercentage(tip);
 
         return true;
+    }
+
+    @FXML
+    private void initialize() {
+        //setCellValueFactory(new PropertyValueFactory<>("name")) gives object "name" to the PropertyValueFactory.
+        //The factory finds and calls getName() (literally adds get to "name").
+        //getName() returns "Burger".
+        //JavaFX displays "Burger" in the cell.
+        itemColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
     @FXML
@@ -116,10 +131,6 @@ public class ReceiptReviewController {
     @FXML
     private void onAddItemClick() {
         if(!saveReviewFields()) {
-            return;
-        }
-        if(receipt == null) {
-            AlertUtils.showError("Missing Reciept", "No receipt has been loaded");
             return;
         }
         try {
@@ -165,6 +176,7 @@ public class ReceiptReviewController {
 
             receipt.setTax(tax);
             taxField.setText(String.format("%.2f", tax));
+            receiptTotalField.setText(String.format("%.2f", receipt.getTotal()));
 
         } catch (NumberFormatException e) {
             //restore the valid number before the user entered a wrong one
@@ -174,27 +186,6 @@ public class ReceiptReviewController {
         }
     }
 
-    @FXML
-    private void onReceiptTotalChanged() {
-        if (receipt == null) {
-            return;
-        }
-
-        try {
-            double total = Double.parseDouble(receiptTotalField.getText());
-
-            if(!Double.isFinite(total) || total < 0) {
-                throw new NumberFormatException();
-            }
-
-            receipt.setTotal(total);
-            receiptTotalField.setText(String.format("%.2f", total));
-
-        } catch (NumberFormatException e) {
-            receiptTotalField.setText(String.format("%.2f", receipt.getTotal()));
-            AlertUtils.showError("Invalid Total", "Please enter a valid, non-negative receipt total");
-        }
-    }
 
     //Purpose: Validate the percentage entered by the user and save it in Bill
     @FXML

@@ -18,9 +18,6 @@ public class AddItemController {
     @FXML
     private TextField itemPriceField;
 
-    public void setReceipt(Receipt receipt) {
-        this.receipt = receipt;
-    }
 
     public void setBill(Bill bill) {
         this.bill = bill;

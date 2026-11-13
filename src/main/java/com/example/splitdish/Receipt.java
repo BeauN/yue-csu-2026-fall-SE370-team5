@@ -26,10 +26,12 @@ public class Receipt {
 
     public void addItem(ReceiptItem item){
         items.add(item);
+        recalculateTotal();
     }
 
     public void removeItem(ReceiptItem item){
         items.remove(item);
+        recalculateTotal();
     }
 
     public double getSubtotal(){
@@ -40,12 +42,17 @@ public class Receipt {
         return runningSubTotal;
     }
 
+    public void recalculateTotal() {
+        this.total = getSubtotal() + tax;
+    }
+
     public double getTax(){
         return this.tax;
     }
 
     public void setTax(double tax){
         this.tax = tax;
+        recalculateTotal();
         
     }
 
@@ -54,7 +61,4 @@ public class Receipt {
         
     }
 
-    public void setTotal(double total){
-        this.total = total;
-    }
 }

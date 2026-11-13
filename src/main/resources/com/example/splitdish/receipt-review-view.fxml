@@ -9,7 +9,7 @@
          <children>
             <Label text="Review Receipt" />
             <TextField fx:id="restaurantNameField" onAction="#onRestaurantNameChanged" promptText="Restaurant Name" />
-            <TableView fx:id="itemTable" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="itemTable" minHeight="200.0" prefHeight="200.0" prefWidth="200.0">
               <columns>
                 <TableColumn fx:id="itemColumn" prefWidth="240.0" text="Item" />
                 <TableColumn fx:id="priceColumn" prefWidth="100.0" text="Price" />
@@ -31,7 +31,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label prefWidth="100.0" text="Total:" />
-                  <TextField fx:id="receiptTotalField" onAction="#onReceiptTotalChanged" />
+                  <TextField fx:id="receiptTotalField" editable="false" />
                </children>
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="236.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">

@@ -3,7 +3,6 @@ package com.example.splitdish;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
@@ -89,11 +88,7 @@ public class DinerController {
         } catch (IOException e) {
             e.printStackTrace();
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Navigation Error");
-            alert.setHeaderText("Unable to open Assign Items");
-            alert.setContentText("An error occurred while loading the next screen.");
-            alert.showAndWait();
+            AlertUtils.showError("Navigation Error", "Unable to open Assign Items screen.");
         }
 
 
