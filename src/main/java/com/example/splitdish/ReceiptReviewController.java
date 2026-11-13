@@ -6,7 +6,6 @@ import javafx.scene.control.Button;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-import javafx.scene.control.Alert;
 
 public class ReceiptReviewController {
     private Receipt receipt;
@@ -47,14 +46,6 @@ public class ReceiptReviewController {
         }
     }
 
-    public void showError(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     public void setBill(Bill bill) {
         this.bill = bill;
         this.receipt = bill.getReceipt();
@@ -65,12 +56,12 @@ public class ReceiptReviewController {
     //show an error and return false. Otherwise, update Receipt and return true.
     private boolean saveReviewFields() {
         if(receipt == null) {
-            showError("Missing Receipt", "No receipt has been loaded.");
+            AlertUtils.showError("Missing Receipt", "No receipt has been loaded.");
             return false;
         }
         String name = restaurantNameField.getText().trim();
         if(name.isEmpty()) {
-            showError("Invalid Restaurant Name", "Restaurant name cannot be empty.");
+            AlertUtils.showError("Invalid Restaurant Name", "Restaurant name cannot be empty.");
             return false;
         }
         double tax;
@@ -87,19 +78,16 @@ public class ReceiptReviewController {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            showError("Invalid Amount", "Tax, total, and tip must be valid, non-negative numbers.");
+            AlertUtils.showError("Invalid Amount", "Tax, total, and tip must be valid, non-negative numbers.");
             return false;
         }
 
-        //we validate all three values before setting them, so we don't save a partially invalid receipt
+        //we validate all four values before setting them, so we don't save a partially invalid receipt
         receipt.setRestaurantName(name);
         receipt.setTax(tax);
         receipt.setTotal(total);
-
-        if(bill == null) {
-            bill = new Bill(receipt);
-        }
         bill.setTipPercentage(tip);
+
         return true;
     }
 
@@ -121,12 +109,33 @@ public class ReceiptReviewController {
             stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
-            showError("Navigation Error", "Unable to open the Add Diners screen.");
+            AlertUtils.showError("Navigation Error", "Unable to open the Add Diners screen.");
         }
     }
 
     @FXML
     private void onAddItemClick() {
+        if(!saveReviewFields()) {
+            return;
+        }
+        if(receipt == null) {
+            AlertUtils.showError("Missing Reciept", "No receipt has been loaded");
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("add-item-view.fxml"));
+            Scene scene = new Scene(loader.load(), 390,700);
+
+            AddItemController controller = loader.getController();
+            controller.setBill(bill);
+
+            Stage stage = (Stage) continueButton.getScene().getWindow();
+            stage.setScene(scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Navigation Error", "Unable to open Add Item screen.");
+        }
 
     }
 
@@ -161,7 +170,7 @@ public class ReceiptReviewController {
             //restore the valid number before the user entered a wrong one
             taxField.setText(String.format("%.2f", receipt.getTax()));
             //display error
-            showError("Invalid Tax", "Please entre a valid, non-negative tax amount");
+            AlertUtils.showError("Invalid Tax", "Please entre a valid, non-negative tax amount");
         }
     }
 
@@ -183,13 +192,16 @@ public class ReceiptReviewController {
 
         } catch (NumberFormatException e) {
             receiptTotalField.setText(String.format("%.2f", receipt.getTotal()));
-            showError("Invalid Total", "Please enter a valid, non-negative receipt total");
+            AlertUtils.showError("Invalid Total", "Please enter a valid, non-negative receipt total");
         }
     }
 
     //Purpose: Validate the percentage entered by the user and save it in Bill
     @FXML
     private void onTipChanged() {
+        if(bill == null) {
+            return;
+        }
         try {
             double tip = Double.parseDouble(tipPercentageField.getText());
             if(!Double.isFinite(tip) || tip < 0) {
@@ -200,7 +212,7 @@ public class ReceiptReviewController {
 
         } catch (NumberFormatException e) {
             tipPercentageField.setText(String.format(java.util.Locale.US, "%.2f", bill.getTipPercentage()));
-            showError("Invalid Tip", "Please enter a valid, non-negative tip percentage.");
+            AlertUtils.showError("Invalid Tip", "Please enter a valid, non-negative tip percentage.");
         }
 
     }
@@ -213,7 +225,7 @@ public class ReceiptReviewController {
 
         if (name.isEmpty()) {
             restaurantNameField.setText(receipt.getRestaurantName());
-            showError("Invalid Restaurant Name", "Restaurant name cannot be empty");
+            AlertUtils.showError("Invalid Restaurant Name", "Restaurant name cannot be empty");
             return;
         }
 
